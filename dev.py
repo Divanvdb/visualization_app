@@ -22,6 +22,6 @@ image_file = os.path.join(image_folder, f"{index1}{index2}{index3}.png")
 with col1:  # Left column for the image
     if os.path.exists(image_file):
         image = Image.open(image_file)
-        st.image(image, caption=f"Displaying {image_file}", use_column_width=True)
+        st.image(image, caption=f"Displaying {image_file}")
     else:
         st.error("Image file not found. Make sure the images exist in the script directory.")
