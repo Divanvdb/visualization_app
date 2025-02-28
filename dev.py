@@ -13,6 +13,8 @@ st.markdown(
             font-size: 32px;
             font-weight: bold;
         }
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
     </style>
     """,
     unsafe_allow_html=True
