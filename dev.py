@@ -119,6 +119,6 @@ with col2:  # Middle column for the main image
         time.sleep(1)
         image_placeholder.image(im80, caption="Rendering...")
         time.sleep(0.3)
-        image_placeholder.image(image, caption="Done!")
+        image_placeholder.image(image, caption="")
     else:
         st.error("Image file not found. Make sure the images exist in the script directory.")
