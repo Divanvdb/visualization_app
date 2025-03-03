@@ -45,6 +45,11 @@ custom_css = """
     .caption {
         font-size: 1.2rem !important;
     }
+
+    /* Hide the slider value label (red text) */
+    .stSelectSlider .stSliderValue {
+        display: none !important;
+    }
     </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
@@ -55,6 +60,8 @@ st.markdown('<div class="title-text">Likelihood of South African Load Shedding</
 # Add vertical spacing
 st.write("")
 st.write("")
+st.write("")
+
 
 # Define the folder containing the images
 image_folder = "grid_imgs"
@@ -77,20 +84,22 @@ with col1:  # Left column for description image
     st.image(image)
 
 with col3:  # Right column for sliders
+    # No label on the slider
     index1 = st.select_slider(
-        "2025 Demand", 
+        "Electricity demand growth (None / High)", 
         options=demand_options, 
-        value="High",
-        key="demand_slider"
+        value="Base",
+        key="demand_slider",
+        
     )
     index2 = st.select_slider(
-        "OCGT Fuel Consumption", 
+        "OCGT daily diesel consumption (100% of 2024 / 60% of 2024)", 
         options=fuel_options, 
         value="Constrained",
         key="fuel_slider"
     )
     index3 = st.select_slider(
-        "New-build Delay", 
+        "New-build delay (No delay / 12 month delay)", 
         options=delay_options, 
         value="12 Month Delay",
         key="delay_slider"
