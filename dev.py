@@ -3,22 +3,14 @@ import os
 from PIL import Image
 
 # Custom CSS to prevent text wrapping
-st.markdown(
-    """
-    <style>
-        .title-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-size: 32px;
-            font-weight: bold;
-        }
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # Display title without wrapping
 st.markdown('<div class="title-text">Scenario-based Load Shedding Risk</div>', unsafe_allow_html=True)
