@@ -1,12 +1,11 @@
 import streamlit as st
 import os
 from PIL import Image
-import time
 
 # Set page to wide mode
 st.set_page_config(layout="wide")
 
-# Custom CSS to maximize space and increase element sizes
+# Custom CSS to maximize space and style radio captions
 custom_css = """
     <style>
     /* Remove Streamlit default elements */
@@ -23,16 +22,45 @@ custom_css = """
         max-width: 100% !important;
     }
     
-    /* Increase title font size */
+    /* Center and style title */
+    .title-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+    
     .title-text {
         font-size: 2.5rem !important;
         font-weight: bold;
         white-space: nowrap;
+        text-align: center;
     }
     
-    /* Increase slider label size */
-    .stSelectSlider label {
+    /* Style radio buttons and labels */
+    div[data-testid="stRadio"] > label {
         font-size: 1.5rem !important;
+        padding-bottom: 1rem;
+        font-weight: bold !important;  /* Make captions bold */
+    }
+    
+    /* Make radio options horizontal */
+    div[data-testid="stRadio"] > div {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 1rem !important;
+    }
+    
+    /* Style individual radio options */
+    div[data-testid="stRadio"] > div > div {
+        margin-right: 1rem !important;
+    }
+
+    .radio-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
     }
     
     /* Ensure images scale properly */
@@ -45,66 +73,67 @@ custom_css = """
     .caption {
         font-size: 1.2rem !important;
     }
-
-    /* Hide the slider value label (red text) */
-    .stSelectSlider .stSliderValue {
-        display: none !important;
-    }
     </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 
-# Display title
-st.markdown('<div class="title-text">Likelihood of South African Load Shedding</div>', unsafe_allow_html=True)
+# Display centered title
+st.markdown(
+    '<div class="title-container"><div class="title-text">Likelihood of South African Load Shedding</div></div>',
+    unsafe_allow_html=True
+)
 
 # Add vertical spacing
 st.write("")
 st.write("")
-st.write("")
-
 
 # Define the folder containing the images
 image_folder = "grid_imgs"
 leg_file = "legend.png"
 
-# Define label mappings for the sliders
-demand_options = ["Base", "High"]
-fuel_options = ["Base", "Constrained"]
-delay_options = ["No Delay", "12 Month Delay"]
+# Define label mappings
+demand_options = ["None", "High"]
+fuel_options = ["100% of 2024", "60% of 2024"]
+delay_options = ["No delay", "12-month delay"]
 
-key_demand = {"Base": "D3", "High": "D5"}
-key_fuel = {"Base": "125TJ", "Constrained": "75TJ"}
-key_delay = {"No Delay": "ND", "12 Month Delay": "12D"}
+key_demand = {"None": "D3", "High": "D5"}
+key_fuel = {"100% of 2024": "125TJ", "60% of 2024": "75TJ"}
+key_delay = {"No delay": "ND", "12-month delay": "12D"}
 
-# Create a four-column layout with wider ratios
-col1, col2, col3 = st.columns([2, 2, 2])  # Adjusted ratios for better space usage
+# Create a three-column layout for main content
+col1, col2, col3 = st.columns([2, 2, 2])
 
-with col1:  # Left column for description image
+with col1:  # Left column for description image and selections
     image = Image.open('grid_imgs/text_description.png')
     st.image(image)
-    
-    st.write("")
-    st.write("")
 
-    index1 = st.select_slider(
-        "Electricity demand growth (None / High)", 
-        options=demand_options, 
-        value="Base",
-        key="demand_slider",
+    # New columns for radio buttons
+
+    rcol1, rcol2, rcol3 = st.columns([1,2,1])
+
+    with rcol2:
+    
+        st.write("")
         
-    )
-    index2 = st.select_slider(
-        "OCGT daily diesel consumption (100% of 2024 / 60% of 2024)", 
-        options=fuel_options, 
-        value="Constrained",
-        key="fuel_slider"
-    )
-    index3 = st.select_slider(
-        "New-build delay (No delay / 12 month delay)", 
-        options=delay_options, 
-        value="12 Month Delay",
-        key="delay_slider"
-    )
+        # Radio buttons with horizontal options and bold captions
+        index1 = st.radio(
+            "**Annual electricity demand growth**",
+            options=demand_options,
+            index=0,
+            key="demand_radio"
+        )
+        index2 = st.radio(
+            "**OCGT daily diesel consumption limit**",
+            options=fuel_options,
+            index=1,
+            key="fuel_radio"
+        )
+        index3 = st.radio(
+            "**New-build commissioning delay**",
+            options=delay_options,
+            index=1,
+            key="delay_radio"
+        )
 
 with col3:  # Right column for legend
     leg_path = os.path.join(image_folder, leg_file)
@@ -114,36 +143,13 @@ with col3:  # Right column for legend
 image_file = os.path.join(image_folder, f"{key_demand[index1]} {key_fuel[index2]} {key_delay[index3]}.png")
 
 with col2:  # Middle column for the main image
-    if os.path.exists(image_file):
-        save_path = os.path.join(image_folder, "path.txt")
-        # Open prev_image
-        with open(save_path, "r") as f:
-            prev_image_path = f.read()
-
-        # Replace \ with / for Windows paths
-
-        prev_image_path = prev_image_path.replace("\\", "/")
-
-        print(prev_image_path)
-        print(image_file)
-        prev_image = Image.open(prev_image_path)
-        image = Image.open(image_file)
-
+    if os.path.exists(image_file):        
+        # Create placeholder for image
         image_placeholder = st.empty()
-
-        # Update the caption in the same image placeholder
-        image_placeholder.image(prev_image, caption="Contacting Plexos server...")
-        time.sleep(1)
-        image_placeholder.image(prev_image, caption="Simulating...")
-        time.sleep(1)
-        image_placeholder.image(prev_image, caption="Rendering...")
-        time.sleep(0.3)
-        image_placeholder.image(image, caption="")
-
-        # Overwrite image path to file
         
-        with open(save_path, "w") as f:
-            f.write(image_file)
+        # Load and display the new image directly
+        image = Image.open(image_file)
+        image_placeholder.image(image, caption="")
             
     else:
         st.error("Image file not found. Make sure the images exist in the script directory.")
