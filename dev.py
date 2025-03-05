@@ -120,6 +120,10 @@ with col2:  # Middle column for the main image
         with open(save_path, "r") as f:
             prev_image_path = f.read()
 
+        # Replace \ with / for Windows paths
+
+        prev_image_path = prev_image_path.replace("\\", "/")
+
         print(prev_image_path)
         print(image_file)
         prev_image = Image.open(prev_image_path)
