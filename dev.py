@@ -118,9 +118,9 @@ with col2:  # Middle column for the main image
         save_path = os.path.join(image_folder, "path.txt")
         # Open prev_image
         with open(save_path, "r") as f:
-            prev_image = f.read()
+            prev_image_path = f.read()
 
-        prev_image = Image.open(prev_image)
+        prev_image = Image.open(prev_image_path)
         image = Image.open(image_file)
         image_placeholder = st.empty()
 
