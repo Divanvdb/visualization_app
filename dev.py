@@ -119,14 +119,11 @@ with col2:  # Middle column for the main image
         # Open prev_image
         with open(save_path, "r") as f:
             prev_image_path = f.read()
-
+        print(prev_image_path)
         prev_image = Image.open(prev_image_path)
         image = Image.open(image_file)
-        image_placeholder = st.empty()
 
-        im20 = Image.open('grid_imgs/20percent.png')
-        im40 = Image.open('grid_imgs/40percent.png')
-        im80 = Image.open('grid_imgs/80percent.png')
+        image_placeholder = st.empty()
 
         # Update the caption in the same image placeholder
         image_placeholder.image(prev_image, caption="Contacting Plexos server...")
