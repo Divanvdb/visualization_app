@@ -36,32 +36,8 @@ custom_css = """
         white-space: nowrap;
         text-align: center;
     }
-    
-    /* Style radio buttons and labels */
-    div[data-testid="stRadio"] > label {
-        font-size: 1.5rem !important;
-        padding-bottom: 1rem;
-        font-weight: bold !important;  /* Make captions bold */
-    }
-    
-    /* Make radio options horizontal */
-    div[data-testid="stRadio"] > div {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 1rem !important;
-    }
-    
-    /* Style individual radio options */
-    div[data-testid="stRadio"] > div > div {
-        margin-right: 1rem !important;
-    }
 
-    .radio-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
+
     
     /* Ensure images scale properly */
     img {
@@ -107,32 +83,34 @@ with col1:  # Left column for description image and selections
     image = Image.open('grid_imgs/text_description.png')
     st.image(image)
 
-    # New columns for radio buttons
+    st.write("")
 
-    rcol1, rcol2, rcol3 = st.columns([1,2,1])
+    rcol1, rcol2, rcol3 = st.columns([1,1,1])
 
-    with rcol2:
-    
-        st.write("")
-        
+    with rcol1:        
         # Radio buttons with horizontal options and bold captions
         index1 = st.radio(
             "**Annual electricity demand growth**",
             options=demand_options,
             index=0,
-            key="demand_radio"
+            key="demand_radio",
+            horizontal=False
         )
+    with rcol2: 
         index2 = st.radio(
             "**OCGT daily diesel consumption limit**",
             options=fuel_options,
             index=1,
-            key="fuel_radio"
+            key="fuel_radio",
+            horizontal=False
         )
+    with rcol3: 
         index3 = st.radio(
-            "**New-build commissioning delay**",
+            "**New-build commissioning delays**",
             options=delay_options,
             index=1,
-            key="delay_radio"
+            key="delay_radio",
+            horizontal=False
         )
 
 with col3:  # Right column for legend
