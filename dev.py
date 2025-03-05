@@ -77,14 +77,15 @@ key_fuel = {"Base": "125TJ", "Constrained": "75TJ"}
 key_delay = {"No Delay": "ND", "12 Month Delay": "12D"}
 
 # Create a four-column layout with wider ratios
-col1, col2, col3, col4 = st.columns([2, 4, 2, 2])  # Adjusted ratios for better space usage
+col1, col2, col3 = st.columns([2, 2, 2])  # Adjusted ratios for better space usage
 
 with col1:  # Left column for description image
     image = Image.open('grid_imgs/text_description.png')
     st.image(image)
+    
+    st.write("")
+    st.write("")
 
-with col3:  # Right column for sliders
-    # No label on the slider
     index1 = st.select_slider(
         "Electricity demand growth (None / High)", 
         options=demand_options, 
@@ -105,7 +106,7 @@ with col3:  # Right column for sliders
         key="delay_slider"
     )
 
-with col4:  # Right column for legend
+with col3:  # Right column for legend
     leg_path = os.path.join(image_folder, leg_file)
     st.image(leg_path)
 
@@ -114,6 +115,12 @@ image_file = os.path.join(image_folder, f"{key_demand[index1]} {key_fuel[index2]
 
 with col2:  # Middle column for the main image
     if os.path.exists(image_file):
+        save_path = os.path.join(image_folder, "path.txt")
+        # Open prev_image
+        with open(save_path, "r") as f:
+            prev_image = f.read()
+
+        prev_image = Image.open(prev_image)
         image = Image.open(image_file)
         image_placeholder = st.empty()
 
@@ -122,12 +129,18 @@ with col2:  # Middle column for the main image
         im80 = Image.open('grid_imgs/80percent.png')
 
         # Update the caption in the same image placeholder
-        image_placeholder.image(im20, caption="Contacting Plexos server...")
-        time.sleep(0.5)
-        image_placeholder.image(im40, caption="Simulating...")
+        image_placeholder.image(prev_image, caption="Contacting Plexos server...")
         time.sleep(1)
-        image_placeholder.image(im80, caption="Rendering...")
+        image_placeholder.image(prev_image, caption="Simulating...")
+        time.sleep(1)
+        image_placeholder.image(prev_image, caption="Rendering...")
         time.sleep(0.3)
         image_placeholder.image(image, caption="")
+
+        # Overwrite image path to file
+        
+        with open(save_path, "w") as f:
+            f.write(image_file)
+            
     else:
         st.error("Image file not found. Make sure the images exist in the script directory.")
