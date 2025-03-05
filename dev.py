@@ -119,7 +119,9 @@ with col2:  # Middle column for the main image
         # Open prev_image
         with open(save_path, "r") as f:
             prev_image_path = f.read()
+
         print(prev_image_path)
+        print(image_file)
         prev_image = Image.open(prev_image_path)
         image = Image.open(image_file)
 
